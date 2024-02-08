@@ -1,0 +1,44 @@
+- Milyen időszakra vonatkozik az értékesítések nyilvántartása. (legkorábbi és legkésőbbi dátum)
+- Melyik eladó milyen értékben értékesített? Érték szerint csökkenőben rendezze az eredményt!
+- Mi a legfiatalabb és a legidősebb vásárlónak a neve és a kora?
+- Mi a neve a második és harmadik legidősebb vásárlónak?
+- Mely megyékbe nem történt még értékesítés?
+- Melyik eladó melyik vásárlónak értéékesített?
+- Melyik hónapban mennyi volt az értékesítés? (év, hónap, értékesítés)
+- A vásárlók nevében mi a leggyakoribb kezdőbetű?
+- Mely vásárlók születtek szűz csillagjegyben? (Szűz: Augusztus 24.- Szeptember 22.)
+- Melyik csillagjegyben hányan születtek?
+    Kos: Március 21.- Április 20.
+    Bika:  Április 21.- Május 21.
+    Ikrek: Május 22.- Június 21.
+    Rák: Június 22.- Július 22.
+    Oroszlán: Július 23.- Augusztus 23.
+    Szűz: Augusztus 24.- Szeptember 22.
+    Mérleg: Szeptember 23. - Október 23.
+    Skorpió: Október 24.- November 22.
+    Nyilas: November 23.- December 21.
+    Bak: December 22.- Január 20.
+    Vízöntő: Január 21.- Február 19.
+    Halak: Február 20.-  Március 20.
+
+- Írassa ki a vasarlok táblából a Békés megyei helységeket!
+- Írassa ki a Heves megyei vásárlók nevét!
+- Írassa ki a László keresztnevű vásárlókat!
+- Írassa ki a Ferenc keresztnevű vásárlókat!
+- Mi a keresztnevek előfordulási gyakorisága a vásárlók között? :)
+        SELECT  name as keresztnev, COUNT(*) AS elofordulas
+        FROM 
+        (select
+          vasarlok.vasarloID,
+          SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING(`nev`,LOCATE(" ",`nev`)+1,100), ' ', keresztnevek.n), ' ', -1) AS name
+        from
+          (select 1 AS n union all
+           select 2 union all select 3 union all
+           select 4 union all select 5) AS keresztnevek INNER JOIN vasarlok
+          on CHAR_LENGTH(SUBSTRING(`nev`,LOCATE(" ",`nev`)+1,100))
+             -CHAR_LENGTH(REPLACE(SUBSTRING(`nev`,LOCATE(" ",`nev`)+1,100), ' ', ''))>=keresztnevek.n-1
+        order by
+          vasarloID, n) AS nevek
+        GROUP BY name
+        ORDER BY 2 DESC,1;
+
